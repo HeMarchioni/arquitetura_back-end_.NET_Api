@@ -70,7 +70,7 @@ namespace Curso.Api.Controllers
         public IActionResult Registrar([FromBody] RegistrarInput registrarInput)
         {
 
-            var options = new DbContextOptionsBuilder<CursoDbContext>();
+            var options = new DbContextOptionsBuilder<CursoDbContext>();  //-> DbContext no contrutor recebe uma configuração
 
             options.UseSqlServer();
 

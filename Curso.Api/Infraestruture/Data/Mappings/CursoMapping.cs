@@ -6,7 +6,7 @@ namespace Curso.Api.Infraestruture.Data.Mappings
 {
     public class CursoMapping : IEntityTypeConfiguration<Cursos>
     {
-        public void Configure(EntityTypeBuilder<Cursos> builder)  // -> colocando a configuração da entitade óderia ser feito na propria classe
+        public void Configure(EntityTypeBuilder<Cursos> builder)  // -> colocando a configuração da entitade poderia ser feito na propria classe
         {
             builder.ToTable("TB_CURSO");
             builder.HasKey(p => p.Codigo);                  //-> PK

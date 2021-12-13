@@ -1,5 +1,6 @@
-﻿using curso.api.Business.Entities;
-using curso.api.Business.Repositories;
+﻿using Curso.Api.Business.Entities;
+using Curso.Api.Business.Repositories;
+using Curso.Api.Infraestruture.Data;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Threading.Tasks;

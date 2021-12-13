@@ -1,21 +1,15 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Reflection;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace Curso.Api
 {
@@ -41,7 +35,7 @@ namespace Curso.Api
             services.AddSwaggerGen(c =>   // -> configuração e add swagger
             {
 
-                c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme          
+                c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme          //-> configuração de Segurança no swagger
                 {
                     Description = "JWT Authorization header using the Bearer scheme (Example: 'Bearer 12345abcdef')",
                     Name = "Authorization",

@@ -13,7 +13,7 @@ namespace Curso.Api.Infraestruture.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.ApplyConfiguration(new CursoMapping());    //-Passa a configuração de relacionamento feita no cursoMapping
+            modelBuilder.ApplyConfiguration(new CursoMapping());    //-Passa a configuração de relacionamento feita no cursoMapping (IEntityTypeConfiguration)
             modelBuilder.ApplyConfiguration(new UsuarioMapping());
             base.OnModelCreating(modelBuilder);
         }

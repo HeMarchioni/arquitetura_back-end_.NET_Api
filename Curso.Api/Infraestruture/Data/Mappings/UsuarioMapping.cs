@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Curso.Api.Infraestruture.Data.Mappings
 {
-    public class UsuarioMapping : IEntityTypeConfiguration<Usuario>
+    public class UsuarioMapping : IEntityTypeConfiguration<Usuario> //-> Configuração de uma entidade (Para reduzir o tamanho do método OnModelCreating no DbContext pode se fazer desse jeito )
     {
         public void Configure(EntityTypeBuilder<Usuario> builder)
         {
