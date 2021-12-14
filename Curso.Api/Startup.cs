@@ -1,3 +1,5 @@
+using curso.api.Infraestruture.Data.Repositories;
+using Curso.Api.Business.Repositories;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -87,6 +89,12 @@ namespace Curso.Api
                       ValidateAudience = false
                   };
               });
+
+
+
+
+            services.AddScoped<IUsuarioRepository, UsuarioRepository>(); //-> tecnica de injeção de depedencia, sera injetado no controlador (como se fosse instanciado e passado para o controlador)   (Desing I)
+            services.AddScoped<ICursoRepository, CursoRepository>();
 
 
 

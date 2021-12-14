@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace curso.api.Infraestruture.Data.Repositories
 {
-    public class UsuarioRepository : IUsuarioRepository
+    public class UsuarioRepository : IUsuarioRepository  //-> desing patter (para nao acessar direto o DbContext pelo controller)
     {
         private readonly CursoDbContext _contexto;
 

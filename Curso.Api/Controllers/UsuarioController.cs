@@ -1,4 +1,5 @@
-﻿using Curso.Api.Filters;
+﻿using Curso.Api.Business.Repositories;
+using Curso.Api.Filters;
 using Curso.Api.Infraestruture.Data;
 using Curso.Api.Models;
 using Curso.Api.Models.Usuarios;
@@ -18,6 +19,15 @@ namespace Curso.Api.Controllers
     [ApiController]
     public class UsuarioController : ControllerBase
     {
+
+
+
+        private readonly IUsuarioRepository _usuarioRepository;
+
+
+
+
+
         // GET: api/<UsuarioController>
         [HttpGet]
         public IEnumerable<string> Get()
