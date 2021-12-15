@@ -1,10 +1,13 @@
-﻿using Curso.Api.Business.Repositories;
+﻿using Curso.Api.Business.Entities;
+using Curso.Api.Business.Repositories;
+using Curso.Api.Configurations;
 using Curso.Api.Filters;
 using Curso.Api.Infraestruture.Data;
 using Curso.Api.Models;
 using Curso.Api.Models.Usuarios;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using Swashbuckle.AspNetCore.Annotations;
 using System;
 using System.Collections.Generic;
@@ -22,24 +25,16 @@ namespace Curso.Api.Controllers
 
 
 
+        private readonly ILogger<UsuarioController> _logger;
         private readonly IUsuarioRepository _usuarioRepository;
+        private readonly IAuthenticationService _authenticationService;
 
 
-
-
-
-        // GET: api/<UsuarioController>
-        [HttpGet]
-        public IEnumerable<string> Get()
+        public UsuarioController(ILogger<UsuarioController> logger,IUsuarioRepository usuarioRepository,IAuthenticationService authenticationService)
         {
-            return new string[] { "value1", "value2" };
-        }
-
-        // GET api/<UsuarioController>/5
-        [HttpGet("{id}")]
-        public string Get(int id)
-        {
-            return "value";
+            _logger = logger;
+            _usuarioRepository = usuarioRepository;
+            _authenticationService = authenticationService;
         }
 
 
@@ -56,10 +51,43 @@ namespace Curso.Api.Controllers
         [HttpPost]
         [Route("logar")]
         [ValidacaoModelStateCustomizado]  // -> se pegar algum erro na validação
-        public IActionResult Logar([FromBody] LoginInput loginInput)
+        public async Task<IActionResult> Logar([FromBody] LoginInput loginInput)
         {
 
-            return Ok(loginInput);
+            try
+            {
+                var usuario = await _usuarioRepository.ObterUsuarioAsync(loginInput.Login);
+
+                if (usuario == null)
+                {
+                    return BadRequest("Houve um erro ao tentar acessar.");
+                }
+
+                //if (usuario.Senha != loginViewModel.Senha.GerarSenhaCriptografada())
+                //{
+                //    return BadRequest("Houve um erro ao tentar acessar.");
+                //}
+
+                var usuarioViewModelOutput = new UsuarioViewModelOutput()
+                {
+                    Codigo = usuario.Codigo,
+                    Login = loginInput.Login,
+                    Email = usuario.Email
+                };
+
+                var token = _authenticationService.GerarToken(usuarioViewModelOutput);
+
+                return Ok(new LoginViewModelOutput
+                {
+                    Token = token,
+                    Usuario = usuarioViewModelOutput
+                });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.ToString());
+                return new StatusCodeResult(500);
+            }
 
 
 
@@ -77,34 +105,36 @@ namespace Curso.Api.Controllers
         [HttpPost]
         [Route("registrar")]
         [ValidacaoModelStateCustomizado]
-        public IActionResult Registrar([FromBody] RegistrarInput registrarInput)
+        public async Task<IActionResult> Registrar([FromBody] RegistrarInput registrarInput)
         {
 
-            var options = new DbContextOptionsBuilder<CursoDbContext>();  //-> DbContext no contrutor recebe uma configuração
+            try
+            {
+                var usuario = await _usuarioRepository.ObterUsuarioAsync(registrarInput.Login);
 
-            options.UseSqlServer();
+                if (usuario != null)
+                {
+                    return BadRequest("Usuário já cadastrado");
+                }
 
-            return Created("", registrarInput);
+                usuario = new Usuario
+                {
+                    Login = registrarInput.Login,
+                    Senha = registrarInput.Senha,
+                    Email = registrarInput.Email
+                };
+                _usuarioRepository.Adicionar(usuario);
+                _usuarioRepository.Commit();
+
+                return Created("", registrarInput);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.ToString());
+                return new StatusCodeResult(500);
+            }
 
         }
 
-
-
-
-
-
-
-
-        // PUT api/<UsuarioController>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
-        {
-        }
-
-        // DELETE api/<UsuarioController>/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
-        }
     }
 }

@@ -1,8 +1,11 @@
 using curso.api.Infraestruture.Data.Repositories;
 using Curso.Api.Business.Repositories;
+using Curso.Api.Configurations;
+using Curso.Api.Infraestruture.Data;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -91,11 +94,15 @@ namespace Curso.Api
               });
 
 
+            services.AddDbContext<CursoDbContext>(options =>
+            {
+                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"), x => x.MigrationsAssembly(typeof(CursoDbContext).Assembly.FullName).EnableRetryOnFailure());
+            });
 
 
-            services.AddScoped<IUsuarioRepository, UsuarioRepository>(); //-> tecnica de injeção de depedencia, sera injetado no controlador (como se fosse instanciado e passado para o controlador)   (Desing I)
+            services.AddScoped<IUsuarioRepository, UsuarioRepository>(); //-> tecnica de injeção de depedencia, sera injetado no controlador sem abrir instancia pq sera na interface (como se fosse instanciado e passado para o controlador)   (Desing I)
             services.AddScoped<ICursoRepository, CursoRepository>();
-
+            services.AddScoped<IAuthenticationService, JwtService>();
 
 
         }
